@@ -63,7 +63,7 @@ const Home = () => {
     e.preventDefault();
     const id = uuidv4();
     setRoomId(id);
-    toast.success("Created New Room");
+    toast.success("Created a new room");
   };
 
   const joinRoom = () => {
@@ -77,9 +77,8 @@ const Home = () => {
   };
 
   const handleChangeEnter = (e) => {
-    if (e.keyCode === 13) {
-      //13 is the keycode for enter key
-      joinRoom();
+    if(e.keyCode === 13){      //13 is the keycode for enter key
+        joinRoom();
     }
   };
 
