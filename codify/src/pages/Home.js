@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const styles = {
@@ -11,7 +14,7 @@ const Home = () => {
     },
     form: {
       textAlign: "center",
-      background: "#282a36", 
+      background: "#282a36",
       padding: "20px",
       borderRadius: "8px",
       boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
@@ -19,7 +22,7 @@ const Home = () => {
     mainLabel: {
       fontSize: "24px",
       marginBottom: "20px",
-      color: "#fff", 
+      color: "#fff",
     },
     inputForm: {
       display: "flex",
@@ -44,12 +47,40 @@ const Home = () => {
     createInfo: {
       marginTop: "10px",
       fontSize: "14px",
-      color: "#ccc", 
+      color: "#ccc",
     },
     createNewBtn: {
       color: "#007BFF",
       textDecoration: "none",
     },
+  };
+
+  const navigate = useNavigate();
+  const [roomId, setRoomId] = useState("");
+  const [username, setUsername] = useState("");
+
+  const createNewRoom = (e) => {
+    e.preventDefault();
+    const id = uuidv4();
+    setRoomId(id);
+    toast.success("Created New Room");
+  };
+
+  const joinRoom = () => {
+    if (!roomId || !username) {
+      toast.error("ROOM ID & Username is required");
+      return;
+    }
+    navigate(`/editor/${roomId}`, {
+      state: { username },
+    });
+  };
+
+  const handleChangeEnter = (e) => {
+    if (e.keyCode === 13) {
+      //13 is the keycode for enter key
+      joinRoom();
+    }
   };
 
   return (
@@ -58,12 +89,28 @@ const Home = () => {
         <img src="#" alt="Codify" />
         <h4 style={styles.mainLabel}>Enter Invitation ROOM ID</h4>
         <div style={styles.inputForm}>
-          <input type="text" style={styles.inputBox} placeholder="ROOM ID" />
-          <input type="text" style={styles.inputBox} placeholder="USERNAME" />
-          <button style={styles.joinBtn}>Join</button>
+          <input
+            type="text"
+            style={styles.inputBox}
+            placeholder="ROOM ID"
+            onChange={(e) => setRoomId(e.target.value)}
+            value={roomId}
+            onKeyUp={handleChangeEnter}
+          />
+          <input
+            type="text"
+            style={styles.inputBox}
+            placeholder="USERNAME"
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            onKeyUp={handleChangeEnter}
+          />
+          <button style={styles.joinBtn} onClick={joinRoom}>
+            Join
+          </button>
           <span style={styles.createInfo}>
             If you Don't have an invite then create &nbsp;
-            <a href="" style={styles.createNewBtn}>
+            <a onClick={createNewRoom} href="" style={styles.createNewBtn}>
               new room
             </a>
           </span>
