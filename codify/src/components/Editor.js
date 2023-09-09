@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef } from "react";
 import Codemirror from "codemirror";
 import "codemirror/lib/codemirror.css";
@@ -8,7 +7,7 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import ACTIONS from "../Actions";
 
-const Editor = (socketRef, roomId, onCodeChange) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
   useEffect(() => {
     async function init() {
@@ -48,7 +47,8 @@ const Editor = (socketRef, roomId, onCodeChange) => {
     }
 
     return () => {
-      if (socketRef.current) { // Check if socketRef.current is defined
+      if (socketRef.current) {
+        // Check if socketRef.current is defined
         socketRef.current.off(ACTIONS.CODE_CHANGE);
       }
     };
