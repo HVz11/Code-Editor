@@ -9,6 +9,7 @@ import ACTIONS from "../Actions";
 
 const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
+
   useEffect(() => {
     async function init() {
       editorRef.current = Codemirror.fromTextArea(
@@ -35,11 +36,13 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
       });
     }
     init();
-  }, []);
+  }, [onCodeChange, roomId, socketRef]);
 
   useEffect(() => {
-    if (socketRef.current) {
-      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+    let socket = socketRef.current; // Copy socketRef.current to a variable
+
+    if (socket) {
+      socket.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         if (code !== null) {
           editorRef.current.setValue(code);
         }
@@ -47,9 +50,8 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     }
 
     return () => {
-      if (socketRef.current) {
-        // Check if socketRef.current is defined
-        socketRef.current.off(ACTIONS.CODE_CHANGE);
+      if (socket) {
+        socket.off(ACTIONS.CODE_CHANGE);
       }
     };
   }, [socketRef]);

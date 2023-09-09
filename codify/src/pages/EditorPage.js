@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useRef, useEffect } from "react";
+import toast from "react-hot-toast";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
 import { initSocket } from "../socket";
@@ -10,14 +10,13 @@ import {
   Navigate,
   useParams,
 } from "react-router-dom";
-import toast from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
   const codeRef = useRef(null);
   const location = useLocation();
-  const reactNavigator = useNavigate();
   const { roomId } = useParams();
+  const reactNavigator = useNavigate();
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
@@ -64,12 +63,12 @@ const EditorPage = () => {
     init();
     return () => {
       if (socketRef.current) {
+        socketRef.current.disconnect();
         socketRef.current.off(ACTIONS.JOINED);
         socketRef.current.off(ACTIONS.DISCONNECTED);
-        socketRef.current.disconnect();
       }
     };
-  }, []);
+  }, [location.state?.username, reactNavigator, roomId]);
 
   async function copyRoomId() {
     try {
@@ -94,7 +93,7 @@ const EditorPage = () => {
       <div className="aside">
         <div className="asideInner">
           <div className="logo">
-            <img className="logoImage" src="" alt="codify" />
+            <img className="logoImage" src="/code-sync.png" alt="logo" />
           </div>
           <h3>Connected</h3>
           <div className="clientsList">
@@ -114,7 +113,9 @@ const EditorPage = () => {
         <Editor
           socketRef={socketRef}
           roomId={roomId}
-          onCodeChange={(code) => (codeRef.current = code)}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
         />
       </div>
     </div>
