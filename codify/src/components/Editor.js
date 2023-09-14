@@ -31,18 +31,19 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
           socketRef.current.emit(ACTIONS.CODE_CHANGE, {
             roomId,
             code,
+            origin: "local",
           });
         }
       });
     }
     init();
-  }, [onCodeChange, roomId, socketRef]);
+  });
 
   useEffect(() => {
-    let socket = socketRef.current; // Copy socketRef.current to a variable
+    let sockets = socketRef.current; // Copy socketRef.current to a variable
 
-    if (socket) {
-      socket.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+    if (sockets) {
+      sockets.on(ACTIONS.CODE_CHANGE, ({ code }) => {
         if (code !== null) {
           editorRef.current.setValue(code);
         }
@@ -50,11 +51,11 @@ const Editor = ({ socketRef, roomId, onCodeChange }) => {
     }
 
     return () => {
-      if (socket) {
-        socket.off(ACTIONS.CODE_CHANGE);
+      if (sockets) {
+        sockets.off(ACTIONS.CODE_CHANGE);
       }
     };
-  }, [socketRef]);
+  });
 
   return <textarea id="realtimeEditor"></textarea>;
 };
