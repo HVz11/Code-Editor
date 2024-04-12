@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { initSocket } from "../socket";
+
 
 const Home = () => {
   const navigate = useNavigate();
   const [roomId, setRoomId] = useState("");
   const [username, setUsername] = useState("");
+  const [socketInitialized, setSocketInitialized] = useState(false);
 
   const createNewRoom = (e) => {
     e.preventDefault();
@@ -14,19 +17,24 @@ const Home = () => {
     setRoomId(id);
     toast.success("Created a new room");
   };
-
-  const joinRoom = () => {
+  const joinRoom = async () => {
     if (!roomId || !username) {
       toast.error("ROOM ID & Username is required");
       return;
     }
+    if (!socketInitialized) {
+      // Initialize socket only once
+      await initSocket();
+      setSocketInitialized(true);
+    }
+
     navigate(`/editor/${roomId}`, {
       state: { username },
     });
   };
 
   const handleChangeEnter = (e) => {
-    if (e.keyCode === 13) {
+    if (e.keyCode === 'Enter') {
       //13 is the keycode for enter key
       joinRoom();
     }
@@ -63,9 +71,9 @@ const Home = () => {
           </button>
           <span className="createInfo">
             If you don't have an invite then create &nbsp;
-            <a onClick={createNewRoom} href="" className="createNewBtn">
+            <Link onClick={createNewRoom} className="createNewBtn">
               new room
-            </a>
+            </Link>
           </span>
         </div>
       </div>

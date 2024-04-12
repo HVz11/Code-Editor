@@ -36,11 +36,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code, origin }) => {
-    if (origin === "local") {
-      socket.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
-    } else {
-    }
+  socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code}) => {
+    io.in(roomId).emit(ACTIONS.CODE_CHANGE, { code });
   });
 
   socket.on(ACTIONS.SYNC_CODE, ({ socketId, code }) => {
