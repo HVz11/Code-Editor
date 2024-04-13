@@ -24,7 +24,6 @@ function Editor({ socketRef, roomId, onCodeChange }) {
       // for sync the code
       editorRef.current = editor;
 
-      // editor.setSize(null, "50%");
       editorRef.current.on("change", (instance, changes) => {
         const { origin } = changes;
         const code = instance.getValue(); 

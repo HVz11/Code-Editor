@@ -23,7 +23,6 @@ const Home = () => {
       return;
     }
     if (!socketInitialized) {
-      // Initialize socket only once
       await initSocket();
       setSocketInitialized(true);
     }
@@ -34,7 +33,7 @@ const Home = () => {
   };
 
   const handleChangeEnter = (e) => {
-    if (e.keyCode === 'Enter') {
+    if (e.keyCode === '13') {
       //13 is the keycode for enter key
       joinRoom();
     }
@@ -43,11 +42,9 @@ const Home = () => {
   return (
     <div className="homePageWrapper">
       <div className="formWrapper">
-        <img
-          className="homePageLogo"
-          src="/code-sync.png"
-          alt="code-sync-logo"
-        />
+        <div className="homePageLogo">
+          <h1>Codify</h1>
+        </div>
         <h4 className="mainLabel">Enter invitation ROOM ID</h4>
         <div className="inputGroup">
           <input
